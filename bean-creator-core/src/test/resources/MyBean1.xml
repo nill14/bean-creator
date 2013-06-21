@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MutableBean>
+<MutableBean name="MyBean" packageName="org.github.nill14.bean.test">
+		<comment>A class javadoc comment</comment>
     <field name="name" type="java.lang.String" value="Hello">Full name</field>
     <field name="age" type="int" value="35">Comment</field>
     <field name="weight" type="double" value="90.0"/>
