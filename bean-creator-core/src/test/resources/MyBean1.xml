@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MutableBean>
+    <field name="name" type="java.lang.String" value="Hello">Full name</field>
+    <field name="age" type="int" value="35">Comment</field>
+    <field name="weight" type="double" value="90.0"/>
+</MutableBean>

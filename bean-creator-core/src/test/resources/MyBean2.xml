@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MutableBean>
+    <field name="name" type="java.lang.String" value="Hello">
+    <field name="age" type="int" value="35">
+    <field name="weight" type="double" value="90.0">
+    
+    <toString>
+    	<name/>
+    </toString>
+
+	<equals>
+		<name/>
+	</equals>
+	
+	<hashCode>
+		<name/>
+	</hashCode>
+    
+</<MutableBean>
