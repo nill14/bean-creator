@@ -11,26 +11,26 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class MutableBeanBuilderSuite extends FunSuite {
  
-  test("Produce a simple test bean") {
- 
-  	val bean = new BeanDescriptor {
-  		val packageName = null
-  		val name = "MyBean"
-  		val comment = "Javadoc comment"
-  		val fields: Seq[FieldDescriptor] = Array(new FieldDescriptor{
-  			val comment = "Number of iterations"  			
-  			val name = "counter"
-  			val classType = classOf[Integer]
-  			val defaultValue = null
-  		})	
-  	}
-  	
-  	val w: PrintWriter = new PrintWriter(System.out)
-  	val builder = new MutableBeanBuilder
-  	builder.build(w, bean)
-  	
-  	w.close
-  }
+//  test("Produce a simple test bean") {
+// 
+//  	val bean = new BeanDescriptor {
+//  		val packageName = null
+//  		val name = "MyBean"
+//  		val comment = "Javadoc comment"
+//  		val fields: Seq[FieldDescriptor] = Array(new FieldDescriptor{
+//  			val comment = "Number of iterations"  			
+//  			val name = "counter"
+//  			val classType = classOf[Integer]
+//  			val defaultValue = null
+//  		})	
+//  	}
+//  	
+//  	val w: PrintWriter = new PrintWriter(System.out)
+//  	val builder = new MutableBeanBuilder
+//  	builder.build(w, bean)
+//  	
+//  	w.close
+//  }
   
  
   test("pop is invoked on an empty stack") {

@@ -1,13 +1,17 @@
 package com.github.nill14.beancreator.trivialwriter
 
-import com.github.nill14.beancreator.builder.IBuilder
-import com.github.nill14.beancreator.model.MutableBean
-import java.io.Writer
-import com.github.nill14.beancreator.builder.BeanDescriptor
 import java.io.PrintWriter
+
+import scala.collection.mutable
+
+import com.github.nill14.beancreator.builder.BeanDescriptor
 import com.github.nill14.beancreator.builder.FieldDescriptor
-import scala.collection.generic.MutableSetFactory
-import scala.collection._
+import com.github.nill14.beancreator.builder.IBuilder
+
+import javax.xml.bind.annotation.XmlAccessorOrder
+import javax.xml.bind.annotation.XmlAccessorType
+import javax.xml.bind.annotation.XmlRootElement
+import javax.xml.bind.annotation.XmlType
 
 class MutableBeanBuilder extends IBuilder {
 	
@@ -35,7 +39,7 @@ class MutableBeanBuilder extends IBuilder {
 			writer println s"	/**"
 			writer println s"	 * ${field.comment}"
 			writer println s"	 */"
-			field.defaultValue match {
+			field.value match {
 				case Nil => { writer println s"	public ${typer(field)} ${field.name} = ${field.defaultValue};" }
 				case _ => 	 { writer println s"	public ${typer(field)} ${field.name};" }
 			}
@@ -64,6 +68,7 @@ class MutableBeanBuilder extends IBuilder {
 			writer println s"	}"
 		}		
 		
+		writer println ""
 		writer println s"}"
 		
 	}
@@ -71,7 +76,7 @@ class MutableBeanBuilder extends IBuilder {
 	def setter(field: FieldDescriptor) = capName("set", field.name)
 	
 	def getter(field: FieldDescriptor) = {
-		if (classOf[Boolean] == field.classType)  
+		if (classOf[Boolean] == field.clazz)  
 			capName("is", field.name)
 		else capName("get", field.name)
 	}
@@ -84,7 +89,7 @@ class MutableBeanBuilder extends IBuilder {
 		b.toString
 	}
 	
-	def typer(field: FieldDescriptor) = field.classType.getSimpleName
+	def typer(field: FieldDescriptor) = field.clazz.getSimpleName
 	
 	def importer(field: FieldDescriptor) = ""
 		
@@ -96,7 +101,7 @@ class MutableBeanBuilder extends IBuilder {
 		val simpleNames = new mutable.HashSet[String]
 //		val typeResolver = new mutable.HashMap[Class[Any], String]
 		
-		val types = (bean.fields filter {_.classType.getPackage != null} map {_.classType}).toSet
+		val types = (bean.fields filter {_.clazz.getPackage != null} map {_.clazz}).toSet
 		
 		for {t <- types
 			packageName = t.getPackage.getName
