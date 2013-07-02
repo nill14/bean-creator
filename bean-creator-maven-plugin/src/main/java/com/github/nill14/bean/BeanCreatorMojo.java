@@ -46,9 +46,11 @@ class BeanCreatorMojo extends AbstractMojo {
 			File resDir = new File(project.getBasedir(), "src/main/resources");
 			File javaDir = new File(project.getBasedir(), "src/main/java");
 			
+			getLog().info(String.format("Found %d xmlDefs", xmlDefs.length));
+			
 			for (String xmlDef : xmlDefs) {
 				File inputFile = new File(resDir, xmlDef);
-				getLog().debug(String.format("Reading input file %s", inputFile));
+				getLog().info(String.format("Reading input file %s", inputFile));
 				InputStream is = new BufferedInputStream(new FileInputStream(inputFile));
 				
 				FieldDescriptor d = null;
@@ -56,11 +58,11 @@ class BeanCreatorMojo extends AbstractMojo {
 				is.close();
 				
 				File packageFile = getPackageDir(javaDir, bean.packageName());
-				getLog().debug(String.format("Creating package %s", packageFile));
+				getLog().info(String.format("Creating package %s", packageFile));
 				packageFile.mkdirs();
 	  	
 				File outputFile = new File(packageFile, bean.name() + ".java");
-				getLog().debug(String.format("Writing output file %s", outputFile));
+				getLog().info(String.format("Writing output file %s", outputFile));
 				outputFile.createNewFile();
 			  	PrintWriter w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
 			  	MutableBeanBuilder builder = new MutableBeanBuilder();

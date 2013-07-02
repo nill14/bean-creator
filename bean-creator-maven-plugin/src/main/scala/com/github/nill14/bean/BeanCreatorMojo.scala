@@ -13,6 +13,8 @@
 //import org.apache.maven.project.MavenProject
 //import com.github.nill14.beancreator.jaxbreader.BeanXmlReader
 //import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder
+//import org.apache.maven.plugin.MojoFailureException
+//import org.apache.maven.plugin.MojoExecutionException
 //
 ///**
 // * Says "Hi" to the user.
@@ -27,42 +29,39 @@
 //	@Parameter
 //	var xmlDefs: Array[String] = Array.empty
 //	
-//	@Parameter
+//	@Parameter(defaultValue="${project}")
 //	var project: MavenProject 
 //	
-//	  /*
-//     * Perform whatever build-process behavior this <code>Mojo</code> implements.
-//     * <br/>
-//     * This is the main trigger for the <code>Mojo</code> inside the <code>Maven</code> system, and allows
-//     * the <code>Mojo</code> to communicate errors.
-//     *
-//     * @throws MojoExecutionException if an unexpected problem occurs.
-//     * Throwing this exception causes a "BUILD ERROR" message to be displayed.
-//     * @throws MojoFailureException if an expected problem (such as a compilation failure) occurs.
-//     * Throwing this exception causes a "BUILD FAILURE" message to be displayed.
-//     */
 //	
 //	def execute {
-//		getLog.info(greeting);
-//		val resDir = new File(project.getBasedir(), "src/main/resources")
-//		val javaDir = new File(project.getBasedir(), "src/main/java")
-//		
-//		for (xmlDef <- xmlDefs) {
-//			val inputFile = new File(resDir, xmlDef)
-//			val is = new BufferedInputStream(new FileInputStream(inputFile))
-////			val is = this.getClass().getResourceAsStream(xmlDef)
+//		try {
+//			getLog.info(greeting);
+//			val resDir = new File(project.getBasedir, "src/main/resources")
+//			val javaDir = new File(project.getBasedir, "src/main/java")
 //			
-//			val bean = (new BeanXmlReader).readXml(is)	
-//			val packageFile = new File(javaDir, bean.packageName.replaceAll(".", File.separator))
-//  	
-//			val outputFile = new File(packageFile, bean.name)
-//		  	val w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)))
-//		  	val builder = new MutableBeanBuilder
-//		  	builder.build(w, bean)
+//			for (xmlDef <- xmlDefs) {
+//				val inputFile = new File(resDir, xmlDef)
+//				getLog.debug(s"Reading input file $inputFile");
+//				val is = new BufferedInputStream(new FileInputStream(inputFile))
+////				val is = this.getClass().getResourceAsStream(xmlDef)
+//				
+//				val bean = (new BeanXmlReader).readXml(is)	
+//				is.close
+//				
+//				val packageFile = new File(javaDir, bean.packageName.replace(".", File.separator))
+//				packageFile.mkdirs
+//				
+//				val outputFile = new File(packageFile, bean.name)
+//				getLog.debug(s"Writing output file $outputFile");
+//				val w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)))
+//				(new MutableBeanBuilder).build(w, bean)
+//				w.close
+//			}
+//			
+//		} catch  {
+//			case e: RuntimeException => throw new MojoFailureException(e.getMessage, e)
+//			case e: Exception => throw new MojoExecutionException(e.getMessage, e)
 //		}
-//		
-//		
-////		throw new MojoFailureException("I am to say Hello World!")
 //	}
 //	
 //}
