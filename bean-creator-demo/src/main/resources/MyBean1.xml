@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MutableBean name="MyBean" packageName="org.github.nill14.bean.test">
-    <field name="name" type="java.lang.String" comment="Full Name">Hello</field>
-    <field name="age" type="int" comment="Comment">35</field>
-    <field name="weight" type="double">90.0</field>
-    
+<MutableBean name="MyBean" package="com.github.nill14.test">
 		<comment>A class javadoc comment</comment>
+
+		<fields>
+		    <field name="name" type="java.lang.String" comment="Full Name" value="Hello"/>
+		    <field name="age" type="int" comment="Comment" value="35"/>
+		    <field name="weight" type="double" comment="A fuzzy value" value="90.0"/>
+    </fields>
+    
 </MutableBean>

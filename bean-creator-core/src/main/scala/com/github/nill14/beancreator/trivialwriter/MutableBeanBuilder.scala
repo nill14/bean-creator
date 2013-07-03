@@ -21,24 +21,37 @@ class MutableBeanBuilder extends IBuilder {
 		writer println "The content is generated. Your changes may be lost. */"
 		writer println ""
 		
-		if (bean.packageName != null) 
-			writer println s"package ${bean.packageName};"
+		bean.packageName match {
+			case Some(x) => writer println s"package ${x};"
+			case _ =>
+		}
 		
 		for (imp <- collectImports(bean)) {
 			writer println s"import ${imp};"
 		}
 
-		writer println s"/**"
-		writer println s" * ${bean.comment}"
-		writer println s" */"
-		writer println s"public class ${bean.name} {"
+		bean.comment match {
+			case Some(comment) => 
+				writer println s"/**"
+				writer println s" * $comment"
+				writer println s" */"
+			case _ =>
+		}
 		
+		writer println s"public class ${bean.name} {"
+		writer println ""
 		
 		for (field <- bean.fields) {
-			writer println ""
-			writer println s"	/**"
-			writer println s"	 * ${field.comment}"
-			writer println s"	 */"
+			
+			field.comment match {
+				case Some(comment) => 
+					writer println ""
+					writer println s"	/**"
+					writer println s"	 * $comment"
+					writer println s"	 */"
+				case _ =>
+			}
+
 			field.value match {
 				case Nil => { writer println s"	public ${typer(field)} ${field.name} = ${field.defaultValue};" }
 				case _ => 	 { writer println s"	public ${typer(field)} ${field.name};" }
@@ -48,21 +61,33 @@ class MutableBeanBuilder extends IBuilder {
 		
 		for (field <- bean.fields) {
 			writer println ""
-			writer println s"	/**"
-			writer println s"	 * ${field.comment}"
-			writer println s"	 * "
-			writer println s"	 * @param ${field.name} ${field.comment}"
-			writer println s"	 */"
+
+			field.comment match {
+				case Some(comment) => 
+					writer println s"	/**"
+					writer println s"	 * $comment"
+					writer println s"	 * "
+					writer println s"	 * @param ${field.name} $comment"
+					writer println s"	 */"
+				case None =>
+			}
+
 			writer println s"	public void ${setter(field)}(${typer(field)} ${field.name}) {" 
 			writer println s"		this.${field.name} = ${field.name};"
 			writer println s"	}"
 			
 			writer println ""
-			writer println s"	/**"
-			writer println s"	 * ${field.comment}"
-			writer println s"	 * "
-			writer println s"	 * @return ${field.comment}"
-			writer println s"	 */"
+			
+			field.comment match {
+				case Some(comment) => 
+					writer println s"	/**"
+					writer println s"	 * $comment"
+					writer println s"	 * "
+					writer println s"	 * @return $comment"
+					writer println s"	 */"
+				case None =>
+			}			
+			
 			writer println s"	public ${typer(field)} ${getter(field)}() {" 
 			writer println s"		return ${field.name};"
 			writer println s"	}"

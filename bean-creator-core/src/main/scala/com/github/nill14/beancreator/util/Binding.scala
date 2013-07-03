@@ -29,11 +29,46 @@ object Binding {
 		def marshal(v: BigDecimal): JBigDecimal = v.underlying
 	}
 
-	abstract class AbstractListAdapter[A] extends XmlAdapter[ArrayList[A], Seq[A]] {
+	abstract class AbstractListAdapter[A, B <: AbstractList[A]] extends XmlAdapter[B, Seq[A]] {
 		import scala.collection.JavaConverters._
 
-		def marshal(v: Seq[A]) = new ArrayList(v.asJava)
-		def unmarshal(v: ArrayList[A]) = v.asScala.toVector
+		def marshal(v: Seq[A]) = if (v == null) create(new ArrayList[A]) else create(v.asJava)
+		def unmarshal(v: B): Seq[A] = v.elem.asScala.toVector
+		def create(l: JList[A]): B
 	}
+
+	trait AbstractList[A] {
+		def elem: JList[A]
+	}	
+	
+	
+//	abstract class AbstractListAdapter[A, J <: AbstractList[A], S <: Seq[A]] extends XmlAdapter[J, S] {
+//		import scala.collection.JavaConverters._
+//
+//		def marshal(v: S): J = {
+//			if (v == null) createJava(Collections.emptyList[A]) 
+//			else createJava(v.asJava)
+//		}
+//		def unmarshal(v: J): S = createScala(v)//v.asScala.toVector
+//		def createJava(l: JList[A]): J
+//		def createScala(l: JList[A]): S
+//	}
+//	
+//	class ListAdapter[A] extends AbstractListAdapter[A, ArrayList[A], Seq[A]] {
+//		import scala.collection.JavaConverters._
+//		
+//		def createJava(l: JList[A]): ArrayList[A] = {
+//			if (l.isInstanceOf[ArrayList[A]]) l.asInstanceOf[ArrayList[A]]
+//			else new ArrayList(l)
+//		}
+//		def createScala(l: JList[A]): Seq[A] = l.asScala.toVector
+//	}
+	
+	class StringOptionAdapter extends OptionAdapter[String](null, "")
+	
+	class OptionAdapter[A](nones: A*) extends XmlAdapter[A, Option[A]] {
+		def marshal(v: Option[A]): A = v.getOrElse(nones(0))
+		def unmarshal(v: A) = if (nones contains v) None else Some(v)
+	}	
 
 }

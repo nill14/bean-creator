@@ -9,34 +9,25 @@ import java.util.ArrayList
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter
 import scala.collection.JavaConversions
 import com.github.nill14.beancreator.util.Binding._
-
-
-class SeqFieldDescriptorAdapter extends AbstractListAdapter[FieldDescriptor]
+import Adapter._
 
 
 @XmlRootElement(name = "MutableBean")
 @XmlAccessorType(XmlAccessType.FIELD)
 case class BeanDescriptor (
 
-	@xmlAttribute(name = "name")	
-	name: String,
+	@xmlAttribute(name = "name", required=true) name: String,
 	
-	@xmlAttribute(name = "packageName")
-	packageName: String,
+	@xmlAttribute(name = "package")
+	@xmlJavaTypeAdapter(classOf[StringOptionAdapter]) packageName: Option[String],
 	
-	@xmlElement(name = "comment")
-	comment: String,
+	@xmlElement
+	@xmlJavaTypeAdapter(classOf[StringOptionAdapter]) comment: Option[String],
 	
-	@xmlElement(name = "field", `type` = classOf[FieldDescriptor])
-	@xmlJavaTypeAdapter(classOf[SeqFieldDescriptorAdapter])
-	fields: Seq[FieldDescriptor]) {
+	@xmlElement(name = "fields")
+    @xmlJavaTypeAdapter(classOf[FieldListAdapter]) fields: Seq[FieldDescriptor] = Nil) {
 	
 	// only needed and accessed by JAXB
-	private def this() = this("", "", "", Vector.empty)
+	private def this() = this(null, None, None, Nil)
 	
-//		@SuppressWarnings({ "rawtypes", "unchecked" })
-//	public Seq<FieldDescriptor> fields() {
-//		Buffer<FieldDescriptor> seq = (Buffer)JavaConversions.asScalaBuffer(fields);
-//		return seq;//(List)fields;
-//	}
 }

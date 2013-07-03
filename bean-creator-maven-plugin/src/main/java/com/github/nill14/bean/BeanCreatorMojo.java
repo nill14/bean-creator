@@ -18,8 +18,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import scala.Option;
+
 import com.github.nill14.beancreator.builder.BeanDescriptor;
-import com.github.nill14.beancreator.builder.FieldDescriptor;
 import com.github.nill14.beancreator.jaxbreader.BeanXmlReader;
 import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder;
 
@@ -27,7 +28,7 @@ import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder;
  * Says "Hi" to the user.
  *
  */
-@Mojo( name = "sayhi", defaultPhase = LifecyclePhase.GENERATE_SOURCES) //PROCESS_RESOURCES)//
+@Mojo( name = "sayhi", defaultPhase = LifecyclePhase.GENERATE_SOURCES) 
 class BeanCreatorMojo extends AbstractMojo {
 
 	@Parameter(property = "sayhi.greeting", defaultValue = "Hello World!")
@@ -53,7 +54,6 @@ class BeanCreatorMojo extends AbstractMojo {
 				getLog().info(String.format("Reading input file %s", inputFile));
 				InputStream is = new BufferedInputStream(new FileInputStream(inputFile));
 				
-				FieldDescriptor d = null;
 				BeanDescriptor bean = (new BeanXmlReader()).readXml(is);
 				is.close();
 				
@@ -77,9 +77,9 @@ class BeanCreatorMojo extends AbstractMojo {
 		
 	}
 
-	private File getPackageDir(File javaDir, String packageName) {
-		if (packageName != null) {
-			return new File(javaDir, packageName.replace(".", "/"));
+	private File getPackageDir(File javaDir, Option<String> packageName) {
+		if (packageName.isDefined()) {
+			return new File(javaDir, packageName.get().replace(".", "/"));
 		}
 		else return javaDir;
 	}

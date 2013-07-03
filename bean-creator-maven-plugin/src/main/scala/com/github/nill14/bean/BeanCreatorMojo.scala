@@ -48,8 +48,14 @@
 //				val bean = (new BeanXmlReader).readXml(is)	
 //				is.close
 //				
-//				val packageFile = new File(javaDir, bean.packageName.replace(".", File.separator))
-//				packageFile.mkdirs
+//				val packageFile = bean.packageName match {
+//					case Some(pack) => {
+//						val dir = new File(javaDir, pack.replace(".", File.separator))
+//						dir.mkdirs
+//						dir
+//					}
+//					case None => javaDir
+//				}
 //				
 //				val outputFile = new File(packageFile, bean.name)
 //				getLog.debug(s"Writing output file $outputFile");

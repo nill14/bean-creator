@@ -6,33 +6,25 @@ import javax.xml.bind.annotation._
 import javax.xml.bind.annotation.adapters._
 import com.github.nill14.beancreator.util.Binding._
 
-class StringOptionAdapter extends OptionAdapter[String](null, "")
 
-class OptionAdapter[A](nones: A*) extends XmlAdapter[A, Option[A]] {
-	def marshal(v: Option[A]): A = v.getOrElse(nones(0))
-	def unmarshal(v: A) = if (nones contains v) None else Some(v)
-}
-
-
-@XmlType(propOrder = Array( "name", "fieldType", "comment" ))
+@XmlType(propOrder = Array( "name", "fieldType", "comment", "defaultValue"))
 @XmlAccessorOrder(value = XmlAccessOrder.ALPHABETICAL)
+@XmlRootElement(name = "field")
+@XmlAccessorType(XmlAccessType.FIELD)
 case class FieldDescriptor(
 	
-	@xmlAttribute(required=true) 	
-	name: String,
+	@xmlAttribute(required=true) name: String,
 	
-	@xmlElement
-	@xmlJavaTypeAdapter(classOf[StringOptionAdapter])
-	comment: Option[String],
+	@xmlAttribute(name="type", required=true) fieldType: String,
+
+	@xmlAttribute
+	@xmlJavaTypeAdapter(classOf[StringOptionAdapter]) comment: Option[String],
 	
-	@xmlAttribute(name="type") 
-	fieldType: String,
-	
-	@XmlValue
-	defaultValue: String) {
+	@xmlAttribute(name="value")
+	@xmlJavaTypeAdapter(classOf[StringOptionAdapter]) defaultValue: Option[String]) {
 	
 	// only needed and accessed by JAXB
-	private def this() = this("", null, "int", "0")
+	private def this() = this(null, null, None, None)
 
 	
 	def clazz: Class[_] = fieldType match {
