@@ -70,5 +70,12 @@ object Binding {
 		def marshal(v: Option[A]): A = v.getOrElse(nones(0))
 		def unmarshal(v: A) = if (nones contains v) None else Some(v)
 	}	
+	
+	class CommaSeparatedAdapter extends XmlAdapter[String, Seq[String]] {
+		def marshal(v: Seq[String]) = v.mkString(", ")
+		def unmarshal(v: String) = v.split(",").map(_.trim)
+		
+	}
+	
 
 }

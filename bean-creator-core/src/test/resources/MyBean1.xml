@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MutableBean name="MyBean" package="com.github.nill14.test2">
+<MutableBean name="MyBean" package="com.github.nill14.test">
 		<comment>A class javadoc comment</comment>
 
 		<fields>
@@ -7,5 +7,11 @@
 		    <field name="age" type="int" comment="Comment" value="35"/>
 		    <field name="weight" type="double" comment="A fuzzy value" value="90.0"/>
     </fields>
+    
+    <methods>
+    		<method name="toString" items="@fqn, @className, @identity, name, age, weight"/>
+    		<method name="hashCode" items="@identity, name"/>
+    		<method name="equals" items="@identity, name, age, weight"/>
+    </methods>
     
 </MutableBean>

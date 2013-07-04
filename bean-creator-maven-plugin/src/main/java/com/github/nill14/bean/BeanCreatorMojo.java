@@ -23,6 +23,8 @@ import scala.Option;
 import com.github.nill14.beancreator.builder.BeanDescriptor;
 import com.github.nill14.beancreator.jaxbreader.BeanXmlReader;
 import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder;
+import com.github.nill14.beancreator.util.DefIndentWriter;
+import com.github.nill14.beancreator.util.IndentWriter;
 
 /**
  * Says "Hi" to the user.
@@ -64,7 +66,8 @@ class BeanCreatorMojo extends AbstractMojo {
 				File outputFile = new File(packageFile, bean.name() + ".java");
 				getLog().info(String.format("Writing output file %s", outputFile));
 				outputFile.createNewFile();
-			  	PrintWriter w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+			  	IndentWriter w = DefIndentWriter.create(
+			  			new PrintWriter(new BufferedWriter(new FileWriter(outputFile))));
 			  	MutableBeanBuilder builder = new MutableBeanBuilder();
 			  	builder.build(w, bean);
 			  	w.close();

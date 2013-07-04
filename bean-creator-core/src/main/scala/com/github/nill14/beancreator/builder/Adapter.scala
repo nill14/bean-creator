@@ -7,6 +7,7 @@ import com.github.nill14.beancreator.util.Binding._
 import javax.xml.bind.annotation.adapters.XmlAdapter
 
 object Adapter {
+	
   class FieldListAdapter extends AbstractListAdapter[FieldDescriptor, FieldList] {
     def create(l: JList[FieldDescriptor]) = new FieldList(l)
   }
@@ -16,6 +17,17 @@ object Adapter {
   case class FieldList(@xmlElementRef(name = "fields") elem: JList[FieldDescriptor]) extends AbstractList[FieldDescriptor] {
     def this() = this(null)
   }
+  
+  
+  class MethodListAdapter extends AbstractListAdapter[MethodDescriptor, MethodList] {
+    def create(l: JList[MethodDescriptor]) = new MethodList(l)
+  }  
+  
+  @XmlRootElement(name = "methods")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  case class MethodList(@xmlElementRef(name = "methods") elem: JList[MethodDescriptor]) extends AbstractList[MethodDescriptor] {
+    def this() = this(null)
+  }  
   
   
 //  	abstract class ListAdapter[A] extends XmlAdapter[JList[A], Seq[A]] {

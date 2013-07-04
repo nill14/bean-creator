@@ -1,25 +1,23 @@
 package com.github.nill14.beancreator.trivialwriter
 
 import java.io.PrintWriter
-
 import scala.collection.mutable
-
 import com.github.nill14.beancreator.builder.BeanDescriptor
 import com.github.nill14.beancreator.builder.FieldDescriptor
 import com.github.nill14.beancreator.builder.IBuilder
-
 import javax.xml.bind.annotation.XmlAccessorOrder
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement
 import javax.xml.bind.annotation.XmlType
+import com.github.nill14.beancreator.util.IndentWriter
 
 class MutableBeanBuilder extends IBuilder {
 	
 	
-	def build(writer: PrintWriter, bean: BeanDescriptor) {
+	def build(writer: IndentWriter, bean: BeanDescriptor) {
 		writer println "/* DO NOT MODIFY THIS FILE!"
 		writer println "The content is generated. Your changes may be lost. */"
-		writer println ""
+		writer println 
 		
 		bean.packageName match {
 			case Some(x) => writer println s"package ${x};"

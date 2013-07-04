@@ -25,7 +25,10 @@ case class BeanDescriptor (
 	@xmlJavaTypeAdapter(classOf[StringOptionAdapter]) comment: Option[String],
 	
 	@xmlElement(name = "fields")
-    @xmlJavaTypeAdapter(classOf[FieldListAdapter]) fields: Seq[FieldDescriptor] = Nil) {
+    @xmlJavaTypeAdapter(classOf[FieldListAdapter]) fields: Seq[FieldDescriptor] = Nil,
+    
+	@xmlElement(name = "methods")
+    @xmlJavaTypeAdapter(classOf[MethodListAdapter]) methods: Seq[MethodDescriptor] = Nil) {
 	
 	// only needed and accessed by JAXB
 	private def this() = this(null, None, None, Nil)
