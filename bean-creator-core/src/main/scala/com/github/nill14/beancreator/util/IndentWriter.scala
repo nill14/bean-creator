@@ -56,13 +56,23 @@ trait IndentWriter {
 	
 	def println {
 		out.println
-		isNewline = false
+		isNewline = true
+	}
+	
+	def prntInc(str: String) {
+		println(str)
+		incIndent
+	}
+	
+	def decPrnt(str: String) {
+		decIndent
+		println(str)
 	}
 	
 	private def indent {
 		if (isNewline) {
 			val c = toChar(indentType)
-			for (i <- 1 to indentSize) out.print(c)
+			for (i <- 1 to _indentLevel * indentSize) out.print(c)
 			isNewline = false
 		}
 	}

@@ -10,146 +10,57 @@ import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement
 import javax.xml.bind.annotation.XmlType
 import com.github.nill14.beancreator.util.IndentWriter
+import com.github.nill14.beancreator.util.Utils
+import com.github.nill14.beancreator.resolver.ImportResolver
+import com.github.nill14.beancreator.util.JavaCodeWriter
 
 class MutableBeanBuilder extends IBuilder {
 	
 	
 	def build(writer: IndentWriter, bean: BeanDescriptor) {
-		writer println "/* DO NOT MODIFY THIS FILE!"
-		writer println "The content is generated. Your changes may be lost. */"
-		writer println 
+		val codeWriter = new JavaCodeWriter(bean, writer)
+		val resolver = codeWriter.resolver
+		val w = codeWriter.writer
 		
-		bean.packageName match {
-			case Some(x) => writer println s"package ${x};"
-			case _ =>
-		}
-		
-		for (imp <- collectImports(bean)) {
-			writer println s"import ${imp};"
-		}
 
 		bean.comment match {
 			case Some(comment) => 
-				writer println s"/**"
-				writer println s" * $comment"
-				writer println s" */"
+				w println s"/**"
+				w println s" * $comment"
+				w println s" */"
 			case _ =>
 		}
 		
-		writer println s"public class ${bean.name} {"
-		writer println ""
+		w println s"public class ${bean.name} {"
+		w.println 
+		w.incIndent
 		
 		for (field <- bean.fields) {
-			
-			field.comment match {
-				case Some(comment) => 
-					writer println ""
-					writer println s"	/**"
-					writer println s"	 * $comment"
-					writer println s"	 */"
-				case _ =>
-			}
-
-			field.value match {
-				case Nil => { writer println s"	public ${typer(field)} ${field.name} = ${field.defaultValue};" }
-				case _ => 	 { writer println s"	public ${typer(field)} ${field.name};" }
-			}
-			
+			(new FieldChunkBuilder).build(w, bean, field, resolver)
 		}
 		
 		for (field <- bean.fields) {
-			writer println ""
+			w.println 
 
-			field.comment match {
-				case Some(comment) => 
-					writer println s"	/**"
-					writer println s"	 * $comment"
-					writer println s"	 * "
-					writer println s"	 * @param ${field.name} $comment"
-					writer println s"	 */"
-				case None =>
-			}
-
-			writer println s"	public void ${setter(field)}(${typer(field)} ${field.name}) {" 
-			writer println s"		this.${field.name} = ${field.name};"
-			writer println s"	}"
+			(new SetterChunkBuilder).build(w, bean, field, resolver)
 			
-			writer println ""
+			w.println 
 			
-			field.comment match {
-				case Some(comment) => 
-					writer println s"	/**"
-					writer println s"	 * $comment"
-					writer println s"	 * "
-					writer println s"	 * @return $comment"
-					writer println s"	 */"
-				case None =>
-			}			
-			
-			writer println s"	public ${typer(field)} ${getter(field)}() {" 
-			writer println s"		return ${field.name};"
-			writer println s"	}"
+			(new GetterChunkBuilder).build(w, bean, field, resolver)
 		}		
 		
-		writer println ""
-		writer println s"}"
-		
-	}
-
-	def setter(field: FieldDescriptor) = capName("set", field.name)
-	
-	def getter(field: FieldDescriptor) = {
-		if (classOf[Boolean] == field.clazz)  
-			capName("is", field.name)
-		else capName("get", field.name)
-	}
-	
-	def capName(prefix: String, name: String) = {
-		val b = new StringBuilder
-		b append prefix
-		b append name.charAt(0).toUpper
-		if (name.length > 1) b append name.substring(1)
-		b.toString
-	}
-	
-	def typer(field: FieldDescriptor) = field.clazz.getSimpleName
-	
-	def importer(field: FieldDescriptor) = ""
-		
-	def collectImports(bean: BeanDescriptor) = {
-		val excluded = 
-			({if (bean.packageName != null) bean.packageName else Nil } :: List("java.lang", "java.util")).toSet 
-			
-		val imports = new mutable.HashSet[String]
-		val simpleNames = new mutable.HashSet[String]
-//		val typeResolver = new mutable.HashMap[Class[Any], String]
-		
-		val types = (bean.fields filter {_.clazz.getPackage != null} map {_.clazz}).toSet
-		
-		for {t <- types
-			packageName = t.getPackage.getName
-			fullName = t.getName
-			simpleName = t.getSimpleName			
+		for {
+			m <-bean.methods
+			if "toString" equals m.name 
 		} {
-//			if (simpleNames contains simpleName) {
-//				//avoid name clash
-//				typeResolver += (t, fullName)
-//			}
-//			else {
-				if (!excluded.contains(packageName)) {
-					imports += fullName
-					simpleNames += simpleName
-//					typeResolver += (t, fullName)
-				}
-//				else {
-//					typeResolver += (t, fullName)
-//				}
-//			}
+			(new ToStringChunkBulder).build(w, bean, m, resolver)
 		}
+
+		w.decIndent
+		w.println 
+		w println "}"
 		
-		imports
+		codeWriter.complete
 	}
-	
-	
 	
 }

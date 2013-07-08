@@ -11,7 +11,7 @@ import com.github.nill14.beancreator.util.Binding._
 @XmlAccessorOrder(value = XmlAccessOrder.ALPHABETICAL)
 @XmlRootElement(name = "method")
 @XmlAccessorType(XmlAccessType.FIELD)
-case class MethodDescriptor(
+case class MethodDescriptor (
 	
 	@xmlAttribute(required=true) name: String,
 	
