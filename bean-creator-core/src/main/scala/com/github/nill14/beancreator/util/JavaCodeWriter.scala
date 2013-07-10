@@ -1,12 +1,13 @@
 package com.github.nill14.beancreator.util
 
-import com.github.nill14.beancreator.builder.BeanDescriptor
 import java.io.PipedWriter
 import java.io.StringWriter
 import java.io.PrintWriter
-import com.github.nill14.beancreator.resolver.ImportResolver
+import java.io.Writer
+import com.github.nill14.beancreator.model.IBean
+import com.github.nill14.beancreator.tool.ImportResolver
 
-class JavaCodeWriter(bean: BeanDescriptor, iWriter: IndentWriter) {
+class JavaCodeWriter(bean: IBean, iWriter: Writer) {
 
 	private val topBuf = new StringWriter
 	private val bottomBuf = new StringWriter
@@ -34,8 +35,8 @@ class JavaCodeWriter(bean: BeanDescriptor, iWriter: IndentWriter) {
 		topWriter.close
 		bottomWriter.close
 		
-		iWriter.out.append(topBuf.getBuffer)
-		iWriter.out.append(bottomBuf.getBuffer)
+		iWriter.append(topBuf.getBuffer)
+		iWriter.append(bottomBuf.getBuffer)
 		
 		iWriter.close
 	}

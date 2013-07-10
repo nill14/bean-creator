@@ -1,11 +1,10 @@
 package com.github.nill14.beancreator.jaxbreader
 
-import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder
 import java.io.BufferedInputStream
-import java.io.PrintWriter
 import java.io.FileInputStream
-import com.github.nill14.beancreator.util.IndentWriter
-import com.github.nill14.beancreator.util.DefIndentWriter
+import java.io.PrintWriter
+
+import com.github.nill14.beancreator.mutable.MutableBeanBuilder
 
 object XmlTest extends App {
  
@@ -14,7 +13,8 @@ object XmlTest extends App {
   	
   	val bean = (new BeanXmlReader).readXml(is)	
   	
-  	val w = DefIndentWriter.create(new PrintWriter(System.out))
+//  	val w = DefIndentWriter.create(new PrintWriter(System.out))
+  	val w = new PrintWriter(System.out)
   	val builder = new MutableBeanBuilder
   	builder.build(w, bean)
   	

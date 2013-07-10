@@ -4,8 +4,7 @@ import java.io.PrintWriter
 import scala.collection.mutable.Stack
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import com.github.nill14.beancreator.builder.BeanDescriptor
-import com.github.nill14.beancreator.builder.FieldDescriptor
+import com.github.nill14.beancreator.model._
 import org.scalatest.junit.JUnitRunner
  
 @RunWith(classOf[JUnitRunner])

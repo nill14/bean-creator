@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -20,11 +21,10 @@ import org.apache.maven.project.MavenProject;
 
 import scala.Option;
 
-import com.github.nill14.beancreator.builder.BeanDescriptor;
 import com.github.nill14.beancreator.jaxbreader.BeanXmlReader;
-import com.github.nill14.beancreator.trivialwriter.MutableBeanBuilder;
-import com.github.nill14.beancreator.util.DefIndentWriter;
-import com.github.nill14.beancreator.util.IndentWriter;
+import com.github.nill14.beancreator.model.IBean;
+import com.github.nill14.beancreator.mutable.MutableBeanBuilder;
+
 
 /**
  * Says "Hi" to the user.
@@ -56,7 +56,7 @@ class BeanCreatorMojo extends AbstractMojo {
 				getLog().info(String.format("Reading input file %s", inputFile));
 				InputStream is = new BufferedInputStream(new FileInputStream(inputFile));
 				
-				BeanDescriptor bean = (new BeanXmlReader()).readXml(is);
+				IBean bean = (new BeanXmlReader()).readXml(is);
 				is.close();
 				
 				File packageFile = getPackageDir(javaDir, bean.packageName());
@@ -66,8 +66,7 @@ class BeanCreatorMojo extends AbstractMojo {
 				File outputFile = new File(packageFile, bean.name() + ".java");
 				getLog().info(String.format("Writing output file %s", outputFile));
 				outputFile.createNewFile();
-			  	IndentWriter w = DefIndentWriter.create(
-			  			new PrintWriter(new BufferedWriter(new FileWriter(outputFile))));
+			  	Writer w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
 			  	MutableBeanBuilder builder = new MutableBeanBuilder();
 			  	builder.build(w, bean);
 			  	w.close();

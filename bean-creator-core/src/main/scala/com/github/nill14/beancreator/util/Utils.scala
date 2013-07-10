@@ -1,16 +1,16 @@
 package com.github.nill14.beancreator.util
 
-import com.github.nill14.beancreator.builder.FieldDescriptor
 import java.sql.Timestamp
-import com.github.nill14.beancreator.builder.BeanDescriptor
+
+import com.github.nill14.beancreator.model._
 
 object Utils {
 
 	
-	def setter(field: FieldDescriptor) = capName("set", field.name)
+	def setter(field: IField) = capName("set", field.name)
 	
-	def getter(field: FieldDescriptor) = {
-		if (classOf[Boolean] == field.clazz)  
+	def getter(field: IField) = {
+		if (classOf[Boolean] == parseClass(field))  
 			capName("is", field.name)
 		else capName("get", field.name)
 	}
@@ -31,4 +31,25 @@ object Utils {
 		w.println 
 	}
 	
+	
+	
+	def parseClass(elem: ITypedElement): Class[_] = elem.classType match {
+		case None => classOf[String]
+		case Some(x) => x match {
+			//quick and dirty
+			case "int" => classOf[Int]
+			case "double" => classOf[Double]
+			case className => Class.forName(className)
+		}
+	}
+	
+	def value(field: IField): Option[String] = field.defaultValue match {
+		case None => None
+		case Some(value) => field.classType match {
+			case None => Some(s""""$value"""")
+			case Some("String") => Some(s""""$value"""")
+			case Some("java.lang.String") => Some(s""""$value"""")
+			case Some(typ) => Some(value)
+		}
+	}	
 }
