@@ -14,6 +14,8 @@ import java.io.Writer;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -25,12 +27,8 @@ import com.github.nill14.beancreator.jaxbreader.BeanXmlReader;
 import com.github.nill14.beancreator.model.IBean;
 import com.github.nill14.beancreator.mutable.MutableBeanBuilder;
 
-
-/**
- * Says "Hi" to the user.
- *
- */
-@Mojo( name = "sayhi", defaultPhase = LifecyclePhase.GENERATE_SOURCES) 
+@Mojo( name = "foo", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+//@Execute(goal = "foo", phase = LifecyclePhase.INSTALL)
 class BeanCreatorMojo extends AbstractMojo {
 
 	@Parameter(property = "sayhi.greeting", defaultValue = "Hello World!")
@@ -39,7 +37,8 @@ class BeanCreatorMojo extends AbstractMojo {
 	@Parameter
 	private String[] xmlDefs;
 	
-	@Parameter(defaultValue="${project}")
+//	@Parameter(defaultValue="${project}")
+	@Component
 	private MavenProject project;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
