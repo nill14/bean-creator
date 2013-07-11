@@ -8,8 +8,12 @@ import com.github.nill14.beancreator.model.jaxb.JaxbField
 import com.github.nill14.beancreator.tool.ImportResolver
 import com.github.nill14.beancreator.builder.IFieldChunkBuilder
 
-class FieldChunkBuilder extends IFieldChunkBuilder {
+class FieldChunkBuilder(modifiers: Option[String]) extends IFieldChunkBuilder {
 
+	def this(str: String) = this(Some(str.trim))
+	def this() = this("public")
+	
+	
 	def build(w: IndentWriter, bean: IBean, field: IField, r: ImportResolver) {
 		w.println 
 
@@ -22,10 +26,17 @@ class FieldChunkBuilder extends IFieldChunkBuilder {
 				w println s" */"
 			case _ =>
 		}
+		
+		val prefix = modifiers match {
+			case Some(x) => w print s"$x "
+			case None => 
+		}
 
+		w print s"${r ^ field} ${field.name}"
+		
 		value(field) match {
-			case Some(value) => { w println s"public ${r ^ field} ${field.name} = ${value};" }
-			case None => { w println s"public ${r ^ field} ${field.name};" }
+			case Some(value) => { w println s" = ${value};" }
+			case None 		 => { w println ";" }
 		}		
 	}
 	

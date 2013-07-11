@@ -1,4 +1,4 @@
-package com.github.nill14.beancreator.trivialwriter
+package com.github.nill14.beancreator.immutable
 
 import java.io.PrintWriter
 import scala.collection.mutable
@@ -14,6 +14,7 @@ import com.github.nill14.beancreator.util.JavaFqn
 import java.io.Writer
 import com.github.nill14.beancreator.builder.IBeanBuilder
 import com.github.nill14.beancreator.model.jaxb.JaxbBean
+import com.github.nill14.beancreator.mutable.FieldChunkBuilder
 
 class ImmutableBeanBuilder extends IBeanBuilder {
 	
@@ -36,9 +37,9 @@ class ImmutableBeanBuilder extends IBeanBuilder {
 		w.println 
 		w.incIndent
 		
-//		for (field <- bean.fields) {
-//			(new FieldChunkBuilder).build(w, bean, field, resolver)
-//		}
+		for (field <- bean.fields) {
+			(new FieldChunkBuilder("private final")).build(w, bean, field, r)
+		}
 //		
 //		for (field <- bean.fields) yield {
 //			w.println 
@@ -56,14 +57,26 @@ class ImmutableBeanBuilder extends IBeanBuilder {
 //			(new ToStringChunkBulder).build(w, bean, m, resolver)
 //		}
 		
-		w prntInc s"public static final ${bean.name}.Builder builder() {"
-		w println s"return new ${bean.name}.Builder();"
+		r bookOut("Builder")
+		w.println
+		w prntInc s"public static final Builder builder() {"
+		w println s"return new Builder();"
 		w decPrnt "}"
 		
 		val langBuilder = JavaFqn.key("org.apache.commons.lang3.builder.Builder<String>");
 
 		w prntInc s"public static class Builder implements ${r ^ langBuilder} {"
+		w.println
 		
+		for (field <- bean.fields) {
+			(new FieldChunkBuilder("protected")).build(w, bean, field, r)
+		}
+		
+		w println "@Override"
+		w prntInc "public String build() {"
+		w println "// TODO Auto-generated method stub"
+		w println "return null;"
+		w decPrnt "}"
 		
 		w decPrnt "}"
 		

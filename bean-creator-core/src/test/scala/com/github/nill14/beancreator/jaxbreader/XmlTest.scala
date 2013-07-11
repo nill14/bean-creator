@@ -3,8 +3,7 @@ package com.github.nill14.beancreator.jaxbreader
 import java.io.BufferedInputStream
 import java.io.FileInputStream
 import java.io.PrintWriter
-
-import com.github.nill14.beancreator.mutable.MutableBeanBuilder
+import com.github.nill14.beancreator.immutable.ImmutableBeanBuilder
 
 object XmlTest extends App {
  
@@ -15,7 +14,7 @@ object XmlTest extends App {
   	
 //  	val w = DefIndentWriter.create(new PrintWriter(System.out))
   	val w = new PrintWriter(System.out)
-  	val builder = new MutableBeanBuilder
+  	val builder = new ImmutableBeanBuilder
   	builder.build(w, bean)
   	
   	

@@ -1,10 +1,9 @@
-package com.github.nill14.beancreator.template
+package com.github.nill14.beancreator.util
 
-import org.scalatest.FunSuite
-import scala.collection.mutable.Stack
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import com.github.nill14.beancreator.tool.ImportResolver
 import org.scalatest.junit.JUnitRunner
-import com.github.nill14.beancreator.util.JavaFqn
  
 @RunWith(classOf[JUnitRunner])
 class JavaFqnSuite extends FunSuite {
@@ -20,12 +19,15 @@ class JavaFqnSuite extends FunSuite {
     assert(res === langBuilder)
   }
  
-//  test("pop is invoked on an empty stack") {
-// 
-//    val emptyStack = new Stack[Int]
-//    intercept[NoSuchElementException] {
-//      emptyStack.pop()
-//    }
-//    assert(emptyStack.isEmpty)
-//  }
+  test("Book out Builder") {
+	  val fqn = "org.apache.commons.lang3.builder.Builder<String>"
+	  val r = new ImportResolver(None)
+	  r bookOut "Builder"
+	  	
+	  val langBuilder = JavaFqn.key(fqn)
+	  
+  	  val res = r ^ langBuilder
+  	  
+  	  assert (fqn === res)
+  }
 }

@@ -9,6 +9,7 @@ import com.github.nill14.beancreator.util.JavaFqn
 
 class ImportResolver(packageName: Option[String]) {
 
+	
 	val excludedImports = 
 			(packageName.getOrElse(Nil) :: List("java.lang", "java.util")).toSet 
 	
@@ -23,6 +24,10 @@ class ImportResolver(packageName: Option[String]) {
 	}
 	
 	def ^ [T](implicit tag : ClassTag[T]): String = resolve(JavaFqn.key(tag.runtimeClass.getName))
+	
+	def bookOut(simpleName: String) {
+		simpleNames += simpleName
+	}
 	
 	
 	def resolve(fqn: JavaFqn): String = {
@@ -47,11 +52,18 @@ class ImportResolver(packageName: Option[String]) {
 	private def resolveSimpleType(fqn: JavaFqn): String = {
 		
 		if (simpleNames contains fqn.simpleName) {
-			fqn.inputName
+			fqn.importName match {
+				case None => fqn.simpleName
+				case Some(x) => x
+			}
 		}
 		else {
 			simpleNames += fqn.simpleName
-			imports.put(fqn.importName.get, fqn.simpleName)
+			fqn.importName match {
+				case Some(x) => imports.put(x, fqn.simpleName)
+				case None => 
+			}
+			
 			fqn.simpleName 
 		}
 	}		

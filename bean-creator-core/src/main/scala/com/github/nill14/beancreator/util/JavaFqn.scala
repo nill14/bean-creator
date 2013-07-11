@@ -8,7 +8,10 @@ case class JavaFqn(
 		val simpleName: String,
 		val parametrizations: Seq[JavaFqn]) {
 	
-	
+	/**
+	 * Parameter-less fully classified name 
+	 * or None if there is nothing to import
+	 */
 	lazy val importName: Option[String] = packageName match {
 		case Some(prefix) => Some(s"$prefix.$simpleName")
 		case None => None

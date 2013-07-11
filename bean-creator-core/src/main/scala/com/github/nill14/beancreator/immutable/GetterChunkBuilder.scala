@@ -1,4 +1,4 @@
-//package com.github.nill14.beancreator.trivialwriter
+//package com.github.nill14.beancreator.immutable
 //
 //import com.github.nill14.beancreator.builder.IChunkBuilder
 //import com.github.nill14.beancreator.util.IndentWriter

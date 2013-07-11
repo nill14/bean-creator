@@ -15,7 +15,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -23,17 +22,15 @@ import org.apache.maven.project.MavenProject;
 
 import scala.Option;
 
+import com.github.nill14.beancreator.builder.IBeanBuilder;
+import com.github.nill14.beancreator.immutable.ImmutableBeanBuilder;
 import com.github.nill14.beancreator.jaxbreader.BeanXmlReader;
 import com.github.nill14.beancreator.model.IBean;
-import com.github.nill14.beancreator.mutable.MutableBeanBuilder;
 
 @Mojo( name = "foo", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 //@Execute(goal = "foo", phase = LifecyclePhase.INSTALL)
 class BeanCreatorMojo extends AbstractMojo {
 
-	@Parameter(property = "sayhi.greeting", defaultValue = "Hello World!")
-	private String greeting = "";
-	
 	@Parameter
 	private String[] xmlDefs;
 	
@@ -44,7 +41,7 @@ class BeanCreatorMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		
 		try {
-			getLog().info(greeting);
+//			getLog().info(greeting);
 			File resDir = new File(project.getBasedir(), "src/main/resources");
 			File javaDir = new File(project.getBasedir(), "src/main/java");
 			
@@ -66,7 +63,7 @@ class BeanCreatorMojo extends AbstractMojo {
 				getLog().info(String.format("Writing output file %s", outputFile));
 				outputFile.createNewFile();
 			  	Writer w = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
-			  	MutableBeanBuilder builder = new MutableBeanBuilder();
+			  	IBeanBuilder builder = new ImmutableBeanBuilder();
 			  	builder.build(w, bean);
 			  	w.close();
 			}
