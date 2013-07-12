@@ -15,6 +15,8 @@ import java.io.Writer
 import com.github.nill14.beancreator.builder.IBeanBuilder
 import com.github.nill14.beancreator.model.jaxb.JaxbBean
 import com.github.nill14.beancreator.mutable.FieldChunkBuilder
+import com.github.nill14.beancreator.model.jaxb.JaxbBean
+import com.github.nill14.beancreator.model.jaxb.JaxbBean
 
 class ImmutableBeanBuilder extends IBeanBuilder {
 	
@@ -34,23 +36,32 @@ class ImmutableBeanBuilder extends IBeanBuilder {
 		}
 		
 		w println s"public final class ${bean.name} {"
-		w.println 
 		w.incIndent
 		
 		for (field <- bean.fields) {
-			(new FieldChunkBuilder("private final")).build(w, bean, field, r)
+			(new FieldChunkBuilder("private final", false)).build(w, bean, field, r)
 		}
-//		
-//		for (field <- bean.fields) yield {
-//			w.println 
-//
-//			(new SetterChunkBuilder).build(w, bean, field, resolver)
-//			
-//			w.println 
-//			
-//			(new GetterChunkBuilder).build(w, bean, field, resolver)
-//		}		
-//		
+
+		w.println
+		w prntInc s"private ${bean.name}(Builder builder) {"
+		
+		for (field <- bean.fields) {
+			//todo check immutability for each field
+			w println s"this.${field.name} = builder.${field.name};"
+		}
+		
+		for (field <- bean.fields) {
+			//todo check validity for each field
+//			w println s"this.${field.name} = builder.${field.name};"
+		}
+		
+		w decPrnt "}"
+		
+		
+		for (field <- bean.fields) yield {
+			(new AccessorChunkBuilder).build(w, bean, field, r)
+		}		
+		
 //		for {
 //			m <-bean.methods
 //		if "toString" equals m.name) {
@@ -59,23 +70,44 @@ class ImmutableBeanBuilder extends IBeanBuilder {
 		
 		r bookOut("Builder")
 		w.println
-		w prntInc s"public static final Builder builder() {"
-		w println s"return new Builder();"
+		w prntInc s"public final Builder builder() {"
+		w println s"return new Builder(this);"
 		w decPrnt "}"
 		
-		val langBuilder = JavaFqn.key("org.apache.commons.lang3.builder.Builder<String>");
+		val langBuilder = JavaFqn.key(s"org.apache.commons.lang3.builder.Builder<${bean.name}>");
 
-		w prntInc s"public static class Builder implements ${r ^ langBuilder} {"
 		w.println
+		w prntInc s"public static class Builder implements ${r ^ langBuilder} {"
+		
+		val b = bean.asInstanceOf[JaxbBean]
+		val builderBean = b.copy(name = "Builder")
 		
 		for (field <- bean.fields) {
-			(new FieldChunkBuilder("protected")).build(w, bean, field, r)
+			(new FieldChunkBuilder("protected")).build(w, builderBean, field, r)
 		}
 		
+		w.println
+		w prntInc s"public Builder() {"
+		w decPrnt "}"
+		
+		val bvar = Utils.varName(bean)
+		w.println
+		w prntInc s"private Builder(${bean.name} ${bvar}) {"
+		for (field <- bean.fields) {
+			//in case of collection appenders check mutability of a collection
+			w println s"this.${field.name} = ${bvar}.${field.name};"
+		}
+		
+		w decPrnt "}"
+		
+		for (field <- bean.fields) yield {
+			(new MutatorChunkBuilder).build(w, builderBean, field, r)
+		}	
+		
+		w.println
 		w println "@Override"
-		w prntInc "public String build() {"
-		w println "// TODO Auto-generated method stub"
-		w println "return null;"
+		w prntInc s"public ${bean.name} build() {"
+		w println s"return new ${bean.name}(this);"
 		w decPrnt "}"
 		
 		w decPrnt "}"

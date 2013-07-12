@@ -23,6 +23,13 @@ object Utils {
 		b.toString
 	}
 	
+	def varName(bean: IBean) = {
+		val b = new StringBuilder
+		b append bean.name.charAt(0).toLower
+		if (bean.name.length > 1) b append bean.name.substring(1)
+		b.toString
+	}
+	
 	def copyrightHeader(w: IndentWriter) {
 		val now = new Timestamp(System.currentTimeMillis)
 		w println "/* DO NOT MODIFY THIS FILE!"
