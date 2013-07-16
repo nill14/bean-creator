@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MutableBean name="MyBean" package="com.github.nill14.test">
-		<comment>A class javadoc comment</comment>
+<model>
+	<beans>
+		<bean name="MyBean">
+			<comment>A class javadoc comment</comment>
 
-		<fields>
-		    <field name="name" type="java.lang.String" comment="Full Name" value="Hello"/>
-		    <field name="age" type="int" comment="Comment" value="35"/>
-		    <field name="weight" type="double" comment="A fuzzy value" value="90.0"/>
-    </fields>
-    
-    <methods>
-    		<method name="toString" items="@fqn, @className, @identity, name, age, weight"/>
-    		<method name="hashCode" items="@identity, name"/>
-    		<method name="equals" items="@identity, name, age, weight"/>
-    </methods>
-    
-</MutableBean>
+			<fields>
+				<field name="name" type="java.lang.String" comment="Full Name" value="Hello" />
+				<field name="age" type="int" comment="Comment" value="35" />
+				<field name="weight" type="double" comment="A fuzzy value" value="90.0" />
+			</fields>
+
+			<methods>
+				<method name="toString" items="@fqn, @className, @identity, name, age, weight" />
+				<method name="hashCode" items="@identity, name" />
+				<method name="equals" items="@identity, name, age, weight" />
+			</methods>
+
+		</bean>
+	</beans>
+
+	<stereotypes>
+		<stereotype name="mutable" package="com.github.nill14.test.mutable" />
+		<stereotype name="immutable" package="com.github.nill14.test.immutable" />
+
+	</stereotypes>
+
+</model> 

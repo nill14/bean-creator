@@ -5,5 +5,5 @@ import com.github.nill14.beancreator.model.IBean
 
 trait IBeanBuilder {
 
-	def build(writer: Writer, bean: IBean)
+	def build(writer: Writer, bean: IBean, ctx: IBuilderContext)
 }

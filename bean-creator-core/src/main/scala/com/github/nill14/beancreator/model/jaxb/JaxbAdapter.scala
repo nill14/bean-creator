@@ -7,27 +7,53 @@ import com.github.nill14.beancreator.util.Binding._
 import javax.xml.bind.annotation.adapters.XmlAdapter
 
 object JaxbAdapter {
-	
-  class FieldListAdapter extends AbstractListAdapter[JaxbField, FieldList] {
-    def create(l: JList[JaxbField]) = new FieldList(l)
-  }
 
+	
   @XmlRootElement(name = "fields")
   @XmlAccessorType(XmlAccessType.FIELD)
-  case class FieldList(@xmlElementRef(name = "fields") elem: JList[JaxbField]) extends AbstractList[JaxbField] {
+  case class JaxbFields(@xmlElementRef(name = "fields") elem: JList[JaxbField]) extends AbstractList[JaxbField] {
     def this() = this(null)
   }
   
+  class FieldsAdapter extends AbstractListAdapter[JaxbField, JaxbFields] {
+	  def create(list: JList[JaxbField]) = new JaxbFields(list)
+  }
   
-  class MethodListAdapter extends AbstractListAdapter[JaxbMethod, MethodList] {
-    def create(l: JList[JaxbMethod]) = new MethodList(l)
-  }  
+  
   
   @XmlRootElement(name = "methods")
   @XmlAccessorType(XmlAccessType.FIELD)
-  case class MethodList(@xmlElementRef(name = "methods") elem: JList[JaxbMethod]) extends AbstractList[JaxbMethod] {
+  case class JaxbMethods(@xmlElementRef(name = "methods") elem: JList[JaxbMethod]) extends AbstractList[JaxbMethod] {
     def this() = this(null)
   }  
+  
+  class MethodsAdapter extends AbstractListAdapter[JaxbMethod, JaxbMethods] {
+	  def create(list: JList[JaxbMethod]) = JaxbMethods(list)
+  }  
+  
+
+  
+  @XmlRootElement(name = "beans")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  case class JaxbBeans(@xmlElementRef(name = "beans") elem: JList[JaxbBean]) extends AbstractList[JaxbBean] {
+    def this() = this(null)
+  }   
+  
+  class BeansAdapter extends AbstractListAdapter[JaxbBean, JaxbBeans] {
+    def create(list: JList[JaxbBean]) = JaxbBeans(list)
+  } 
+  
+
+  
+  @XmlRootElement(name = "stereotypes")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  case class JaxbStereotypes(@xmlElementRef(name = "stereotype") elem: JList[JaxbStereotype]) extends AbstractList[JaxbStereotype] {
+    def this() = this(null)
+  }   
+  
+  class StereotypesAdapter extends AbstractListAdapter[JaxbStereotype, JaxbStereotypes] {
+    def create(list: JList[JaxbStereotype]) = JaxbStereotypes(list)
+  } 
   
   
 //  	abstract class ListAdapter[A] extends XmlAdapter[JList[A], Seq[A]] {

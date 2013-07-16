@@ -9,12 +9,8 @@ trait IBean {
 	
 	def comment: Option[String]
 	
-	def packageName: Option[String] //eventually IPackage#name
-	
 	def fields: Seq[IField]
 	
 	def methods: Seq[IMethod]
-	
-	//def stereotypes: Seq[String] //eventually IPackage#stereotypes
 	
 }

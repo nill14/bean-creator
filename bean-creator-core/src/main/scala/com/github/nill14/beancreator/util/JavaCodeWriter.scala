@@ -6,8 +6,9 @@ import java.io.PrintWriter
 import java.io.Writer
 import com.github.nill14.beancreator.model.IBean
 import com.github.nill14.beancreator.tool.ImportResolver
+import com.github.nill14.beancreator.builder.IBuilderContext
 
-class JavaCodeWriter(bean: IBean, iWriter: Writer) {
+class JavaCodeWriter(iWriter: Writer, bean: IBean, ctx: IBuilderContext) {
 
 	private val topBuf = new StringWriter
 	private val bottomBuf = new StringWriter
@@ -15,12 +16,12 @@ class JavaCodeWriter(bean: IBean, iWriter: Writer) {
 	private val topWriter = DefIndentWriter.create(new PrintWriter(topBuf))
 	private val bottomWriter = DefIndentWriter.create(new PrintWriter(bottomBuf))
 	
-	val resolver = new ImportResolver(bean.packageName)
+	val resolver = new ImportResolver(ctx.packageName)
 	def writer: IndentWriter = bottomWriter
 	
 	Utils.copyrightHeader(topWriter)
 	
-	bean.packageName match {
+	ctx.packageName match {
 		case Some(x) => topWriter println s"package ${x};"
 		case _ =>
 	}
@@ -38,6 +39,6 @@ class JavaCodeWriter(bean: IBean, iWriter: Writer) {
 		iWriter.append(topBuf.getBuffer)
 		iWriter.append(bottomBuf.getBuffer)
 		
-		iWriter.close
+//		iWriter.close
 	}
 }

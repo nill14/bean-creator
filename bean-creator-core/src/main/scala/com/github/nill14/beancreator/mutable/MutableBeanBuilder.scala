@@ -1,17 +1,17 @@
 package com.github.nill14.beancreator.mutable
 
 import java.io.Writer
-
 import com.github.nill14.beancreator.builder.IBeanBuilder
 import com.github.nill14.beancreator.model._
 import com.github.nill14.beancreator.util.IndentWriter
 import com.github.nill14.beancreator.util.JavaCodeWriter
+import com.github.nill14.beancreator.builder.IBuilderContext
 
 class MutableBeanBuilder extends IBeanBuilder {
 	
 	
-	def build(writer: Writer, bean: IBean) {
-		val codeWriter = new JavaCodeWriter(bean, writer)
+	def build(writer: Writer, bean: IBean, ctx: IBuilderContext) {
+		val codeWriter = new JavaCodeWriter(writer, bean, ctx)
 		val resolver = codeWriter.resolver
 		val w = codeWriter.writer
 		

@@ -17,12 +17,13 @@ import com.github.nill14.beancreator.model.jaxb.JaxbBean
 import com.github.nill14.beancreator.mutable.FieldChunkBuilder
 import com.github.nill14.beancreator.model.jaxb.JaxbBean
 import com.github.nill14.beancreator.model.jaxb.JaxbBean
+import com.github.nill14.beancreator.builder.IBuilderContext
 
 class ImmutableBeanBuilder extends IBeanBuilder {
 	
 	
-	def build(writer: Writer, bean: IBean) {
-		val codeWriter = new JavaCodeWriter(bean, writer)
+	def build(writer: Writer, bean: IBean, ctx: IBuilderContext) {
+		val codeWriter = new JavaCodeWriter(writer, bean, ctx)
 		val r = codeWriter.resolver
 		val w = codeWriter.writer
 		
